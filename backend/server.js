@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 
 const __dirname = path.resolve();
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+// app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '/frontend/build')));
@@ -23,6 +23,14 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.get('/api/products', (req, res) => {
+  const keyword = req.query.keyword ? {
+    name: {
+      $regex: req.query.keyword,
+      $options: 'i'
+    }
+  } : {}
+
+    // products = products.find({...keyword})
     res.json(products);
 })
 
